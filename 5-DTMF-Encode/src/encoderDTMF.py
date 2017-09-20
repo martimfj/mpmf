@@ -15,6 +15,7 @@ import math
 periodo = 1
 fs = 44100
 duration = 50
+x = np.linspace(0, periodo, fs * periodo)
 
 def getTone(tone):
     DTMF = {1: (697, 1209),
@@ -44,12 +45,12 @@ def makeTone(tone):
 
 def createToneWave(tone):
     lower, higher = tone
-    x = np.linspace(0, periodo, fs * periodo)
     return np.sin(2 * math.pi * x * lower) + np.sin(2 * math.pi * x * higher)
 
-def plotTone(value):
+def plotTone(tone):
     plt.title('Sond Wave')
     plt.ylabel('Values')
-    plt.plot(value, label='values')
+    plt.plot(x[0:500], tone[0:500])
+    plt.axis('tight')
     plt.legend(loc='upper right')
-    plt.show
+    plt.show()

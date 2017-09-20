@@ -18,9 +18,8 @@ from matplotlib.animation import FuncAnimation
 from path import path
 # https://python-sounddevice.readthedocs.io/en/0.3.8/
 
-periodo = 1
 fs = 44100
-duration = 5
+duration = 1
 x = np.linspace(0, duration, fs*duration)
 
 recordingSteps = 12
@@ -50,7 +49,7 @@ while(counter < recordingSteps):
     sd.wait()
 
     y = audio[:,0]
-    play_sound(y, fs)
+    # play_sound(y, fs)
 
     print("-------------------------")
     print ("Salvando dados no arquivo :")

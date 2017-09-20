@@ -20,7 +20,7 @@ sd.default.samplerate = fs
 sd.default.channels = 1
 duration = 5
 
-arquivo_audio = "./audio/recebido.png"
+arquivo_audio = "./audio/recebido.wav"
 
 audio = sd.rec(duration*fs)
 print ("Microfone gravando... ")
@@ -36,6 +36,7 @@ print ("Salvando dados no arquivo :")
 print (" - {}".format(arquivo_audio))
 file = open(arquivo_audio, 'wb')
 file.write(y)
+print("Arquivo Salvo")
 
 
 x = np.linspace(0, duration*fs, duration*fs)

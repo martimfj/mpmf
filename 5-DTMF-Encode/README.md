@@ -3,10 +3,10 @@ Os tons do DTMF são formados pela composição de duas senoides em diferentes f
 
 |            | 	1209 Hz    | 1336 Hz	 | 1477 Hz	   |
 |------------|-------------|-------------|-------------|
-| ** 697 Hz**	 | **1**       | **2**       | **3**       |
-| ** 770 Hz**	 | **4**       | **5**       | **6**       |
-| ** 852 Hz**	 | **7**       | **8**       | **9**       |
-| ** 941 Hz**	 | **X**       | **0**       | **#**       |
+| **697 Hz**	 | **1**       | **2**       | **3**       |
+| **770 Hz**	 | **4**       | **5**       | **6**       |
+| **852 Hz**	 | **7**       | **8**       | **9**       |
+| **941 Hz**	 | **X**       | **0**       | **#**       |
 
 
 #  Geração de tons
@@ -22,8 +22,6 @@ import math
 
 onda_do_tom = np.sin(2 * math.pi * x * lower) + np.sin(2 * math.pi * x * higher)
 ```
-
-A seguir algumas dicas para a implementação do projeto 5 - DTMF - ENCODE
 
 # Documentação - Must Have
 - Descrever a geração dos tons

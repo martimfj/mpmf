@@ -1,13 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-#-------# Recepção de áudio #-------#
-# Deve receber um áudio pelo microfone
-# A cada segundo plota um gráfico do sinal recebido pelo microfone
-
-#-------# Tons #-------#
-#Recebe cada um dos tons (a cada 1 segundo) e salva os sinais para uso futuro. 
-
 import numpy as np
 import math
 import sounddevice as sd
@@ -59,7 +52,7 @@ while(counter < recordingSteps):
     print("Arquivo Salvo")
 
     plt.plot(x[500:1000], y[500:1000])
-    plt.title('Sond Wave')
+    plt.title('Sound Wave')
     plt.ylabel('Amplitude')
     plt.xlabel('Tempo')
     plt.axis('tight')

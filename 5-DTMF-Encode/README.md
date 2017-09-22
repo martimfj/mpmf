@@ -29,7 +29,7 @@ A recepção de sons foi feita pelo arquivo `decoderDTMF.py`, que utiliza o paco
 
 **obs:** O *sounddevice* pode ser instalado pelo: `pip install soundfile`
 
-# Gráficos dos tons
+# Gráficos dos tons gerados
 - [Tom 0](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_0.png)
 - [Tom 1](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_1.png)
 - [Tom 2](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_2.png)
@@ -42,6 +42,21 @@ A recepção de sons foi feita pelo arquivo `decoderDTMF.py`, que utiliza o paco
 - [Tom 9](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_9.png)
 - [Tom *](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_A.png)
 - [Tom HashTag](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_H.png)
+
+# Gráficos dos tons recebidos
+- [Tom 0](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_0.png)
+- [Tom 1](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_1.png)
+- [Tom 2](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_2.png)
+- [Tom 3](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_3.png)
+- [Tom 4](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_4.png)
+- [Tom 5](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_5.png)
+- [Tom 6](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_6.png)
+- [Tom 7](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_7.png)
+- [Tom 8](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_8.png)
+- [Tom 9](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_9.png)
+- [Tom *](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_ask.png)
+- [Tom HashTag](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_hash.png)
+
 
 # Documentação - Must Have
 - Descrever a geração dos tons

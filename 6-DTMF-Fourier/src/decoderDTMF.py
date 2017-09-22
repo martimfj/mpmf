@@ -1,58 +1,51 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 import numpy as np
 import math
 import sounddevice as sd
 import soundfile as sf
-
+import time
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from path import path
-# https://python-sounddevice.readthedocs.io/en/0.3.8/
 
-fs = 44100
-duration = 3
-x = np.linspace(0, duration, fs*duration)
+# setup de variaveis
+frequency = 44100
+duration = 0.01
 
-recordingSteps = 12
+realtime = False
 
-sd.default.samplerate = fs
+sd.default.samplerate = frequency
 sd.default.channels = 1
-arquivo_audio = "./audio/recebido"
 
-def generateFilePath(fileName, counter):
-    return "./audio/tom_ask.wav"#fileName + str(counter) + ".wav"
+# Cria plot realtime temporal
+plt.ion()
+fig = plt.figure("F(y)", figsize=(10, 10))
+ax = fig.add_subplot(111)
 
-def record_to_file(file, data, fs):
-    sf.write(file, data, fs)
+# Calculate de FFT from a signal
+# https://docs.scipy.org/doc/scipy/reference/tutorial/fftpack.html
+def calcFFT(signal, fs):
+    from scipy.fftpack import fft
+    from scipy import signal as window
 
+    N = len(signal)
+    T = 1 / fs
+    xf = np.linspace(0.0, 1.0 / (2.0 * T), N // 2)
+    yf = fft(signal)
+    return(xf, yf[0:N // 2])
 
-def play_sound(data, fs):
-    print("Reproduzindo audio gravado...")
-    sd.play(data, fs)
-    sd.wait()
+while True:
+    # Atualiza plot
+    y, fs = sf.read('./audio/tom_0.wav')
+    
+    if (realtime):
+        audio = sd.rec(duration * frequency)
+        y = audio[:, 0]
 
+    y = 20 * np.log10(np.abs(y))
+    X, Y = calcFFT(y, frequency)
 
-counter = 0
-# while(counter < recordingSteps):
-    # counter += 1
-audio = sd.rec(duration*fs)
-print ("Microfone gravando... ")
-sd.wait()
+    ax.clear()
+    ax.plot(X[0:5000], np.abs(Y[0:5000]))
+    fig.canvas.draw()
+    plt.pause(duration)
 
-y = audio[:,0]
-# play_sound(y, fs)
-
-print("-------------------------")
-print ("Salvando dados no arquivo :")
-print (" - {}".format(arquivo_audio))
-record_to_file(generateFilePath(arquivo_audio, counter), y, fs)
-print("Arquivo Salvo")
-
-plt.plot(x[500:1000], y[500:1000])
-plt.title('Sound Wave')
-plt.ylabel('Amplitude')
-plt.xlabel('Tempo')
-plt.axis('tight')
-plt.show()

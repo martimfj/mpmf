@@ -59,6 +59,4 @@ A recepção de sons foi feita pelo arquivo `decoderDTMF.py`, que utiliza o paco
 
 
 # Documentação - Must Have
-- Descrever a geração dos tons
-- Descrever as frequências que compõem cada tom
-- Plotar e comentar os gráficos de cada tom com o do gerado e recebido.
+

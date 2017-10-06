@@ -1,62 +1,53 @@
-# Frequências dos Tons
-Os tons do *Dual tone multi frequency* (DTMF) são formados pela composição de duas senoides em diferentes frequências, uma com frequência baixa (< 941 Hz) e outra com frequência alta (> 1209 Hz).
+# lmmf_sound
 
-|            | 	1209 Hz    | 1336 Hz	 | 1477 Hz	   |
-|------------|-------------|-------------|-------------|
-| **697 Hz**	 | **1**       | **2**       | **3**       |
-| **770 Hz**	 | **4**       | **5**       | **6**       |
-| **852 Hz**	 | **7**       | **8**       | **9**       |
-| **941 Hz**	 | **X**       | **0**       | **#**       |
+## Sobre
+A description of your project follows. A good description is clear, short, and to the point. Describe the importance of your project, and what it does.
 
+## Indice
+Optionally, include a table of contents in order to allow other people to quickly navigate especially long or detailed READMEs.
 
-#  Geração de tons
+## Installation
+Installation is the next section in an effective README. Tell other users how to install your project locally. Optionally, include a gif to make the process even more clear for other people.
 
-A geração de sons foi feita a partir do `encoderDTMF.py`, que utiliza dos pacotes numpy e sounddevice para respectivamente, gerar ondas senoidais e tocá-las como audios.
+## Usage
+The next section is usage, in which you instruct other people on how to use your project after they’ve installed it. This would also be a good place to include screenshots of your project in action.
 
-**obs:** O *sounddevice* pode ser instalado pelo: `pip install sounddevice`
+##Credits
+Include a section for credits in order to highlight and link to the authors of your project.
 
-As ondas dos tons são criadas a partir da "soma" de senoidais como no código abaixo:
-```python
-import numpy as np
-import math
+##License
+Finally, include a section for the license of your project. For more information on choosing a license, check out GitHub’s licensing guide!
 
-onda_do_tom = np.sin(2 * math.pi * x * lower) + np.sin(2 * math.pi * x * higher)
-```
+ - http://patorjk.com/software/taag/
+ - pyqtgraph
+ - pyqt4
+ - pyqt Designer
+ - pyuic4 input.ui -o output.py
+ - sounddevice
+ - soundfile
+ - numpy
 
-# Recepção de tons
+ https://github.com/matplotlib/matplotlib/issues/6559
+ https://github.com/swharden/Python-GUI-examples
 
-A recepção de sons foi feita pelo arquivo `decoderDTMF.py`, que utiliza o pacote `sounddevice` e o `soundfile` para receber os sinais e gravar em um arquivo .wav. Ele grava os sinais emitidos pelo `encoderDTMF.py` através de múltiplos steps de gravação. Em cada step, ele grava o microfone do computador por um tempo pré-determinado, salva e plota o sinal.
+ https://gist.github.com/endolith/250860
 
-**obs:** O *sounddevice* pode ser instalado pelo: `pip install soundfile`
+# Sinais de Fourier
+| Fourier Transmitido | Fourier Recebido | Tom |
+|------------|-------------|-------------|
+| ![Tom](img/encoder/fourier/tone_0_fourier.png) | ![Tom](img/decoder/fourier/tone_0_fourier.png) | Tom 0       |
+| ![Tom](img/encoder/fourier/tone_1_fourier.png) | ![Tom](img/decoder/fourier/tone_1_fourier.png) | Tom 1       |
+| ![Tom](img/encoder/fourier/tone_2_fourier.png) | ![Tom](img/decoder/fourier/tone_2_fourier.png) | Tom 2       |
+| ![Tom](img/encoder/fourier/tone_3_fourier.png) | ![Tom](img/decoder/fourier/tone_3_fourier.png) | Tom 3       |
+| ![Tom](img/encoder/fourier/tone_4_fourier.png) | ![Tom](img/decoder/fourier/tone_4_fourier.png) | Tom 4       |
+| ![Tom](img/encoder/fourier/tone_5_fourier.png) | ![Tom](img/decoder/fourier/tone_5_fourier.png) | Tom 5       |
+| ![Tom](img/encoder/fourier/tone_6_fourier.png) | ![Tom](img/decoder/fourier/tone_6_fourier.png) | Tom 6       |
+| ![Tom](img/encoder/fourier/tone_7_fourier.png) | ![Tom](img/decoder/fourier/tone_7_fourier.png) | Tom 7       |
+| ![Tom](img/encoder/fourier/tone_6_fourier.png) | ![Tom](img/decoder/fourier/tone_8_fourier.png) | Tom 8       |
+| ![Tom](img/encoder/fourier/tone_7_fourier.png) | ![Tom](img/decoder/fourier/tone_9_fourier.png) | Tom 9       |
+| ![Tom](img/encoder/fourier/tone_hashtag_fourier.png) | ![Tom](img/decoder/fourier/tone_hashtag_fourier.png) | Tom #       |
+| ![Tom](img/encoder/fourier/tone_asterisk_fourier.png) | ![Tom](img/decoder/fourier/tone_asterisk_fourier.png) | Tom *       |
 
-# Gráficos dos tons gerados
-- [Tom 0](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_0.png)
-- [Tom 1](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_1.png)
-- [Tom 2](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_2.png)
-- [Tom 3](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_3.png)
-- [Tom 4](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_4.png)
-- [Tom 5](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_5.png)
-- [Tom 6](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_6.png)
-- [Tom 7](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_7.png)
-- [Tom 8](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_8.png)
-- [Tom 9](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_9.png)
-- [Tom *](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_A.png)
-- [Tom HashTag](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/gerado/tom_H.png)
+Dado os sinais enviados, os sinais foram recebidos com certo ruído dado pelo microfone ou ambiente. A frequência detectada foi próxima da frequência do tom, tendo como variância 3. As frequências encontradas são registradas no console na hora da análise.
 
-# Gráficos dos tons recebidos
-- [Tom 0](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_0.png)
-- [Tom 1](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_1.png)
-- [Tom 2](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_2.png)
-- [Tom 3](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_3.png)
-- [Tom 4](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_4.png)
-- [Tom 5](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_5.png)
-- [Tom 6](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_6.png)
-- [Tom 7](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_7.png)
-- [Tom 8](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_8.png)
-- [Tom 9](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_9.png)
-- [Tom *](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_ask.png)
-- [Tom HashTag](https://github.com/martimfj/mpmf/blob/master/5-DTMF-Encode/doc/recebido/tom_hash.png)
-
-
-# Documentação - Must Have
-
+Na geração dos tons, foi utilizado um tempo de um segundo e na recepção também. Na recepção, quanto maior o tempo de gravação, maiores eram os ruídos e mais difícil era a detecção do som. A detecção do som não foi possível "em tempo real" somente num ambiente com ruídos controlados, em que o tom era gravado e depois passava por análise.

@@ -148,7 +148,7 @@ class SWHear():
         self.stream_thread_new()
 
 if __name__=="__main__":
-    ear=SWHear(updatesPerSecond=10) # optinoally set sample rate here
+    ear=SWHear(updatesPerSecond=1) # optinoally set sample rate here
     ear.stream_start() #goes forever
     lastRead=ear.chunksRead
     while True:

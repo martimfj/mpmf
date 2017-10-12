@@ -268,6 +268,7 @@ class DTMF(QtGui.QMainWindow, ui_DTMF. Ui_MainWindow):
             self.console("These frequencies were detected in the FFT: {}Hz, {}Hz".format(peaks[0][0],peaks[1][0]))
             if 697-5 <= peaks[0][0] <= 697+5 and 1209-5 <= peaks[1][0] <= 1209+5:
                     self.console("Which indicates that the tone reproduced was: {}".format("1"))
+                    print("Achei")
             elif 697-5 <= peaks[0][0] <= 697+5 and 1336-5 <= peaks[1][0] <= 1336+5:
                     self.console("Which indicates that the tone reproduced was: {}".format("2"))
             elif 697-5 <= peaks[0][0] <= 697+5 and 1477-5 <= peaks[1][0] <= 1477+5:

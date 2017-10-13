@@ -154,7 +154,7 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
             self.plotDataTime(audio2_data, version)
 
     def plotDataTime(self, data, version):
-        if type == "1":
+        if version == "1":
             self.widget_audio1_time.clear()
             #self.widget_audio1_time.setRange(xRange=(100,600),yRange=(-2,2))
             self.widget_audio1_time.plot(data, pen=self.pen)
@@ -166,7 +166,7 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
             self.plotDataFrequency(data, version)
 
     def plotDataFrequency(self, data, version):
-        if type == "1":
+        if version == "1":
             self.widget_audio1_freq.clear()
             #self.widget_audio1_time.setRange(xRange=(100,600),yRange=(-2,2))
             audio_fft = abs(self.FFT(data))
@@ -231,12 +231,12 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
     def plotCarrierFrequency(self, data, version):
         if version == "1":
             self.widget_carrier1_freq.clear()
-            #self.widget_carrier1_freq.setRange(xRange=(100,600),yRange=(-2,2))
+            self.widget_carrier1_freq.setRange(xRange=(0,10000))
             audio_fft = abs(self.FFT(data))
             self.widget_carrier1_freq.plot(audio_fft, pen=self.pen)
         else:
             self.widget_carrier2_freq.clear()
-            #self.widget_carrier2_freq.setRange(xRange=(100,600),yRange=(-2,2))
+            self.widget_carrier2_freq.setRange(xRange=(0,10000))
             audio_fft = abs(self.FFT(data))
             self.widget_carrier2_freq.plot(audio_fft, pen=self.pen)
     

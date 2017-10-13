@@ -15,7 +15,13 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         self.setupUi(self)
         self.pen = pyqtgraph.mkPen(color='g')
         self.fs = 44100
-
+        self.periodo = 1
+        self.duration = 5
+        self.batch_name = None
+        self.fc_1 = self.spin_freq_1.value()
+        self.fc_2 = self.spin_freq_2.value()
+        self.carrier_1 = self.carrier_type_1.currentText()
+        self.carrier_2 = self.carrier_type_2.currentText()
         # Variables
 
         #Audio 1 - Time
@@ -113,6 +119,16 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         self.button_record_1.clicked.connect(lambda: self.recordMic("1"))
         self.button_record_2.clicked.connect(lambda: self.recordMic("2"))
 
+        self.spin_freq_1.valueChanged.connect(lambda: self.spin_change("1"))
+        self.spin_freq_2.valueChanged.connect(lambda: self.spin_change("2"))
+
+        self.carrier_type_1.currentIndexChanged.connect(lambda: self.carrier_type_change("1"))
+        self.carrier_type_2.currentIndexChanged.connect(lambda: self.carrier_type_change("2"))
+
+        self.plotCarrierTime(self.createCarrierWave("1"), "1")
+        self.plotCarrierTime(self.createCarrierWave("2"), "2")
+
+
     #Functions
 
     def console(self, text):
@@ -124,32 +140,32 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
     def cleanConsole(self):
         self.console_display.clear()
 
-    def loadFile(self, type):
+    def loadFile(self, version):
         directory = os.getcwd()
         fileLocation = QtGui.QFileDialog.getOpenFileName(self, 'Open file', directory, "WAVE Files (*.wav)")
         path, fileName = os.path.split(fileLocation)
-        self.console("Audio {1} File Loaded from: {0}".format(fileLocation, type))
+        self.console("Audio {1} File Loaded from: {0}".format(fileLocation, version))
 
-        if type == "1":
+        if version == "1":
             audio1_data, fs = sf.read(fileLocation)
-            self.plotDataTime(audio1_data, type)
+            self.plotDataTime(audio1_data, version)
         else:
             audio2_data, fs = sf.read(fileLocation)
-            self.plotDataTime(audio2_data, type)
+            self.plotDataTime(audio2_data, version)
 
-    def plotDataTime(self, data, type):
+    def plotDataTime(self, data, version):
         if type == "1":
             self.widget_audio1_time.clear()
             #self.widget_audio1_time.setRange(xRange=(100,600),yRange=(-2,2))
             self.widget_audio1_time.plot(data, pen=self.pen)
-            self.plotDataFrequency(data, type)
+            self.plotDataFrequency(data, version)
         else:
             self.widget_audio2_time.clear()
             #self.widget_audio2_time.setRange(xRange=(100,600),yRange=(-2,2))
             self.widget_audio2_time.plot(data, pen=self.pen)
-            self.plotDataFrequency(data, type)
+            self.plotDataFrequency(data, version)
 
-    def plotDataFrequency(self, data, type):
+    def plotDataFrequency(self, data, version):
         if type == "1":
             self.widget_audio1_freq.clear()
             #self.widget_audio1_time.setRange(xRange=(100,600),yRange=(-2,2))
@@ -167,17 +183,78 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         fourier_data = fft(data)
         return fourier_data[0:N // 2]
 
-    def recordMic(self, type):
-        audio = sd.rec(1*self.fs, channels = 1)
-        print ("Mic recording... ")
+    def recordMic(self, version):
+        self.console("Mic recording for 5 seconds")
+        audio = sd.rec(self.duration * self.fs, channels = 1)
         sd.wait()
+        self.console("Recording is over.")
         y = audio[:,0]
-        self.plotDataTime(y, type)
 
-        import uuid
-        filename = "recorded_{}_".format(type) + str(uuid.uuid4()) + ".wav"
-        print(filename)
-        self.saveFile(filename, y)
+        self.plotDataTime(y, version)
+
+        # import uuid
+        # unique = uuid.uuid4()
+        # filename = "recorded_" + str(unique)[:5] + "_{}.wav".format(type)
+        # print(filename)
+        # self.saveFile(filename, y)
+
+    # def saveFile(self, fileName, audio):
+    #     filePath = "./audio/" + "tone_" + str(fileName) + ".wav"
+    #     sf.write(filePath, audio, self.fs)
+    #     self.console("Tone {0} was saved as: {1}".format(fileName, filePath))
+
+    def createCarrierWave(self, version):      
+        x = np.linspace(0, self.periodo, self.fs * self.periodo)
+        if self.carrier_1 == "Cosine":
+            if version == "1":
+                return np.cos(2 * np.pi *  self.fc_1 * x)
+            else:
+                return np.cos(2 * np.pi *  self.fc_2 * x)
+        else:
+            if version == "2":
+                return np.sin(2 * np.pi *  self.fc_2 * x)
+            else:
+                return np.sin(2 * np.pi *  self.fc_1 * x)
+
+    def plotCarrierTime(self, data, version):
+        if version == "1":
+            self.widget_carrier1_time.clear()
+            self.widget_carrier1_time.setRange(xRange=(0,80),yRange=(-1,1))
+            self.widget_carrier1_time.plot(data, pen=self.pen)
+            self.plotCarrierFrequency(data, version)
+        else:
+            self.widget_carrier2_time.clear()
+            self.widget_carrier2_time.setRange(xRange=(0,80),yRange=(-1,1))
+            self.widget_carrier2_time.plot(data, pen=self.pen)
+            self.plotCarrierFrequency(data, version)
+
+    def plotCarrierFrequency(self, data, version):
+        if version == "1":
+            self.widget_carrier1_freq.clear()
+            #self.widget_carrier1_freq.setRange(xRange=(100,600),yRange=(-2,2))
+            audio_fft = abs(self.FFT(data))
+            self.widget_carrier1_freq.plot(audio_fft, pen=self.pen)
+        else:
+            self.widget_carrier2_freq.clear()
+            #self.widget_carrier2_freq.setRange(xRange=(100,600),yRange=(-2,2))
+            audio_fft = abs(self.FFT(data))
+            self.widget_carrier2_freq.plot(audio_fft, pen=self.pen)
+    
+    def spin_change(self, version):
+        if version == "1":
+            self.fc_1 = self.spin_freq_1.value()
+            self.plotCarrierTime(self.createCarrierWave("1"), "1")
+        else:
+            self.fc_2 = self.spin_freq_2.value()
+            self.plotCarrierTime(self.createCarrierWave("2"), "2")
+
+    def carrier_type_change(self, version):
+        if version == "1":
+            self.carrier_1 = self.carrier_type_1.currentText()
+            self.plotCarrierTime(self.createCarrierWave("1"), "1")
+        else:
+            self.carrier_2 = self.carrier_type_2.currentText()
+            self.plotCarrierTime(self.createCarrierWave("2"), "2")
 
 
 if __name__=="__main__":

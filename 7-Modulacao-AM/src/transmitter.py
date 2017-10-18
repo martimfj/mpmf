@@ -22,6 +22,8 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         self.fc_2 = self.spin_freq_2.value()
         self.carrier_1 = self.carrier_type_1.currentText()
         self.carrier_2 = self.carrier_type_2.currentText()
+        self.message_1 = None
+        self.message_2 = None
         # Variables
 
         #Audio 1 - Time
@@ -128,9 +130,14 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         self.plotCarrierTime(self.createCarrierWave("1"), "1")
         self.plotCarrierTime(self.createCarrierWave("2"), "2")
 
+        # Starts disabled until some audio is loaded
+        self.spin_freq_1.setEnabled(False)
+        self.carrier_type_1.setEnabled(False)
+
+        self.spin_freq_2.setEnabled(False)
+        self.carrier_type_2.setEnabled(False)
 
     #Functions
-
     def console(self, text):
         item = QtGui.QListWidgetItem()
         item.setText(text)
@@ -147,11 +154,13 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         self.console("Audio {1} File Loaded from: {0}".format(fileLocation, version))
 
         if version == "1":
-            audio1_data, fs = sf.read(fileLocation)
-            self.plotDataTime(audio1_data, version)
+            self.message_1, fs = sf.read(fileLocation)
+            self.plotDataTime(self.message_1, version)
         else:
-            audio2_data, fs = sf.read(fileLocation)
-            self.plotDataTime(audio2_data, version)
+            self.message_2, fs = sf.read(fileLocation)
+            self.plotDataTime(self.message_2, version)
+            self.spin_freq_2.setEnabled(True)
+            self.carrier_type_2.setEnabled(True)
 
     def plotDataTime(self, data, version):
         if version == "1":
@@ -159,11 +168,15 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
             #self.widget_audio1_time.setRange(xRange=(100,600),yRange=(-2,2))
             self.widget_audio1_time.plot(data, pen=self.pen)
             self.plotDataFrequency(data, version)
+            self.spin_freq_1.setEnabled(True)
+            self.carrier_type_1.setEnabled(True)
         else:
             self.widget_audio2_time.clear()
             #self.widget_audio2_time.setRange(xRange=(100,600),yRange=(-2,2))
             self.widget_audio2_time.plot(data, pen=self.pen)
             self.plotDataFrequency(data, version)
+            self.spin_freq_2.setEnabled(True)
+            self.carrier_type_2.setEnabled(True)
 
     def plotDataFrequency(self, data, version):
         if version == "1":
@@ -189,6 +202,11 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         sd.wait()
         self.console("Recording is over.")
         y = audio[:,0]
+
+        if version == "1":
+            self.message_1 = y
+        else:
+            self.message_2 = y
 
         self.plotDataTime(y, version)
 
@@ -222,11 +240,13 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
             self.widget_carrier1_time.setRange(xRange=(0,80),yRange=(-1,1))
             self.widget_carrier1_time.plot(data, pen=self.pen)
             self.plotCarrierFrequency(data, version)
+            self.plotModulatedTime(self.message_1, data, version)
         else:
             self.widget_carrier2_time.clear()
             self.widget_carrier2_time.setRange(xRange=(0,80),yRange=(-1,1))
             self.widget_carrier2_time.plot(data, pen=self.pen)
             self.plotCarrierFrequency(data, version)
+            self.plotModulatedTime(self.message_2, data, version)
 
     def plotCarrierFrequency(self, data, version):
         if version == "1":
@@ -268,7 +288,9 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
 
             self.carrier_1 = self.carrier_type_2.currentText()
             self.plotCarrierTime(self.createCarrierWave("1"), "1")
-            
+
+    def plotModulatedTime(self, data, carrier, version):
+          return "Oi" 
             
 
 

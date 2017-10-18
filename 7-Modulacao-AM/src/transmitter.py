@@ -252,9 +252,24 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         if version == "1":
             self.carrier_1 = self.carrier_type_1.currentText()
             self.plotCarrierTime(self.createCarrierWave("1"), "1")
-        else:
+
+            index = self.carrier_type_2.findText(self.carrier_1)
+            self.carrier_type_2.setCurrentIndex(index)
+
+            self.carrier_2 = self.carrier_type_1.currentText()
+            self.plotCarrierTime(self.createCarrierWave("2"), "2")
+
+        if version == "2":
             self.carrier_2 = self.carrier_type_2.currentText()
             self.plotCarrierTime(self.createCarrierWave("2"), "2")
+
+            index = self.carrier_type_1.findText(self.carrier_2)
+            self.carrier_type_1.setCurrentIndex(index)
+
+            self.carrier_1 = self.carrier_type_2.currentText()
+            self.plotCarrierTime(self.createCarrierWave("1"), "1")
+            
+            
 
 
 if __name__=="__main__":

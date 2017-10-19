@@ -140,7 +140,7 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         self.spin_freq_2.setEnabled(False)
         self.carrier_type_2.setEnabled(False)
 
-        self.button_play.clicked.connect(lambda: self.playSound(self.ultimateaudio))
+        self.button_play.clicked.connect(lambda: self.playSound())
 
     #Functions
     def console(self, text):
@@ -163,12 +163,14 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
             self.plotDataTime(self.message_1, version)
             self.plotCarrierTime(self.createCarrierWave("1"), "1")
             self.console("Audio {1} File Loaded from: {0}".format(fileLocation, version))
+            self.saveFile("audio1_filtrado.wav", self.message_1)
         else:
             self.message_2, self.fl = sf.read(fileLocation)
             self.message_2 = self.LPF(self.message_2, self.cut_freq, self.fl)
             self.plotDataTime(self.message_2, version)
             self.plotCarrierTime(self.createCarrierWave("2"), "2")
             self.console("Audio {1} File Loaded from: {0}".format(fileLocation, version))
+            self.saveFile("audio2_filtrado.wav", self.message_2)
             
     def plotDataTime(self, data, version):
         if version == "1":
@@ -215,10 +217,12 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
             self.message_1 = self.LPF(y, self.cut_freq, self.fs)
             self.plotCarrierTime(self.createCarrierWave(version), version)
             self.plotDataTime(self.message_1, version)
+            
         else:
             self.message_2 = self.LPF(y, self.cut_freq, self.fs)
             self.plotCarrierTime(self.createCarrierWave(version), version)
             self.plotDataTime(self.message_2, version)
+            
 
         # import uuid
         # unique = uuid.uuid4()
@@ -306,6 +310,7 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
             self.widget_modsig1_time.setRange(xRange=(0,80),yRange=(-1,1))
             self.widget_modsig1_time.plot(self.modulatedTime1, pen=self.pen)
             self.plotModulatedFrequency(self.modulatedTime1, version)
+            self.saveFile("audio1_modulated.wav", self.modulatedTime1)
             
         else:
             self.modulatedTime2 = data * carrier
@@ -313,6 +318,7 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
             self.widget_modsig2_time.setRange(xRange=(0,80),yRange=(-1,1))
             self.widget_modsig2_time.plot(self.modulatedTime2, pen=self.pen)
             self.plotModulatedFrequency(self.modulatedTime2, version)
+            self.saveFile("audio2_modulated.wav", self.modulatedTime2)
 
     def plotModulatedFrequency(self, data, version):
         if version == "1":
@@ -356,11 +362,21 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         self.widget_modsigf_freq.clear()
         audio_fft = abs(self.FFT(data))
         self.widget_modsigf_freq.plot(audio_fft, pen=self.pen)
-        
-    def playSound(self, data):
+
+    def saveFile(self, fileName, audio):
+        filePath = "./audio/" + str(fileName)
+        sf.write(filePath, audio, self.fs)
+        self.console("{0} was saved as: {1}".format(fileName, filePath))
+
+    def playSound(self):
         if self.ultimateaudio != None:
-            sd.play(data, self.fs)
+            sd.play(self.ultimateaudio, self.fs)
             sd.wait()
+
+            import uuid
+            unique = uuid.uuid4()
+            filename = "generated_" + str(unique)[:5] + ".wav"
+            self.saveFile(filename, self.ultimateaudio)
         else:
             self.console("Segura ae campeão, você não gerou tudo ainda")
 

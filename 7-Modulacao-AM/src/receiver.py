@@ -33,14 +33,14 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         Essa função retorna o áudio captado pelo período de tempo especificado
     '''
     def getMicAudio(self):
-        audio, fs = sf.read('../audio/generated_4f978.wav')
-        # print("Microfone gravando... ")
-        # audio = sd.rec(self.recordDuration * self.fs)
-        # sd.wait()
-        # print("Pronto... ")
-        # audio = audio[:, 0]
-        # sd.play(audio, fs)
-        # sd.wait()
+        # audio, fs = sf.read('../audio/generated_4f978.wav')
+        print("Microfone gravando... ")
+        audio = sd.rec(self.recordDuration * self.fs)
+        sd.wait()
+        print("Pronto... ")
+        audio = audio[:, 0]
+        sd.play(audio, fs)
+        sd.wait()
         return audio
 
     '''

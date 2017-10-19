@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from PyQt4 import QtGui,QtCore
 import pyqtgraph as pg
 import pyqtgraph.exporters
@@ -15,8 +16,9 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         self.setupUi(self)
         self.pen = pyqtgraph.mkPen(color='g')
         self.fs = 44100
+        self.fl = None
         self.periodo = 1
-        self.duration = 5
+        self.duration = 3
         self.batch_name = None
         self.fc_1 = self.spin_freq_1.value()
         self.fc_2 = self.spin_freq_2.value()
@@ -24,6 +26,10 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         self.carrier_2 = self.carrier_type_2.currentText()
         self.message_1 = None
         self.message_2 = None
+        self.cut_freq = 4000
+        self.modulatedTime1 = None
+        self.modulatedTime2 = None
+        self.ultimateaudio = None
         # Variables
 
         #Audio 1 - Time
@@ -127,15 +133,14 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         self.carrier_type_1.currentIndexChanged.connect(lambda: self.carrier_type_change("1"))
         self.carrier_type_2.currentIndexChanged.connect(lambda: self.carrier_type_change("2"))
 
-        self.plotCarrierTime(self.createCarrierWave("1"), "1")
-        self.plotCarrierTime(self.createCarrierWave("2"), "2")
-
         # Starts disabled until some audio is loaded
         self.spin_freq_1.setEnabled(False)
         self.carrier_type_1.setEnabled(False)
 
         self.spin_freq_2.setEnabled(False)
         self.carrier_type_2.setEnabled(False)
+
+        self.button_play.clicked.connect(lambda: self.playSound(self.ultimateaudio))
 
     #Functions
     def console(self, text):
@@ -151,17 +156,20 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         directory = os.getcwd()
         fileLocation = QtGui.QFileDialog.getOpenFileName(self, 'Open file', directory, "WAVE Files (*.wav)")
         path, fileName = os.path.split(fileLocation)
-        self.console("Audio {1} File Loaded from: {0}".format(fileLocation, version))
 
         if version == "1":
-            self.message_1, fs = sf.read(fileLocation)
+            self.message_1, self.fl = sf.read(fileLocation)
+            self.message_1 = self.LPF(self.message_1, self.cut_freq, self.fl)
             self.plotDataTime(self.message_1, version)
+            self.plotCarrierTime(self.createCarrierWave("1"), "1")
+            self.console("Audio {1} File Loaded from: {0}".format(fileLocation, version))
         else:
-            self.message_2, fs = sf.read(fileLocation)
+            self.message_2, self.fl = sf.read(fileLocation)
+            self.message_2 = self.LPF(self.message_2, self.cut_freq, self.fl)
             self.plotDataTime(self.message_2, version)
-            self.spin_freq_2.setEnabled(True)
-            self.carrier_type_2.setEnabled(True)
-
+            self.plotCarrierTime(self.createCarrierWave("2"), "2")
+            self.console("Audio {1} File Loaded from: {0}".format(fileLocation, version))
+            
     def plotDataTime(self, data, version):
         if version == "1":
             self.widget_audio1_time.clear()
@@ -197,18 +205,20 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         return fourier_data[0:N // 2]
 
     def recordMic(self, version):
-        self.console("Mic recording for 5 seconds")
+        self.console("Mic recording for 3 seconds")
         audio = sd.rec(self.duration * self.fs, channels = 1)
         sd.wait()
         self.console("Recording is over.")
         y = audio[:,0]
 
         if version == "1":
-            self.message_1 = y
+            self.message_1 = self.LPF(y, self.cut_freq, self.fs)
+            self.plotCarrierTime(self.createCarrierWave(version), version)
+            self.plotDataTime(self.message_1, version)
         else:
-            self.message_2 = y
-
-        self.plotDataTime(y, version)
+            self.message_2 = self.LPF(y, self.cut_freq, self.fs)
+            self.plotCarrierTime(self.createCarrierWave(version), version)
+            self.plotDataTime(self.message_2, version)
 
         # import uuid
         # unique = uuid.uuid4()
@@ -221,8 +231,8 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
     #     sf.write(filePath, audio, self.fs)
     #     self.console("Tone {0} was saved as: {1}".format(fileName, filePath))
 
-    def createCarrierWave(self, version):      
-        x = np.linspace(0, self.periodo, self.fs * self.periodo)
+    def createCarrierWave(self, version):
+        x = np.linspace(0, self.periodo, self.fs * self.duration)
         if self.carrier_1 == "Cosine":
             if version == "1":
                 return np.cos(2 * np.pi *  self.fc_1 * x)
@@ -290,8 +300,69 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
             self.plotCarrierTime(self.createCarrierWave("1"), "1")
 
     def plotModulatedTime(self, data, carrier, version):
-          return "Oi" 
+        if version == "1":
+            self.modulatedTime1 = data * carrier
+            self.widget_modsig1_time.clear()
+            self.widget_modsig1_time.setRange(xRange=(0,80),yRange=(-1,1))
+            self.widget_modsig1_time.plot(self.modulatedTime1, pen=self.pen)
+            self.plotModulatedFrequency(self.modulatedTime1, version)
             
+        else:
+            self.modulatedTime2 = data * carrier
+            self.widget_modsig2_time.clear()
+            self.widget_modsig2_time.setRange(xRange=(0,80),yRange=(-1,1))
+            self.widget_modsig2_time.plot(self.modulatedTime2, pen=self.pen)
+            self.plotModulatedFrequency(self.modulatedTime2, version)
+
+    def plotModulatedFrequency(self, data, version):
+        if version == "1":
+            self.widget_modsig1_freq.clear()
+            self.widget_modsig1_freq.setRange(xRange=(0,10000))
+            audio_fft = abs(self.FFT(data))
+            self.widget_modsig1_freq.plot(audio_fft, pen=self.pen)
+            self.ResultingModulated()
+        else:
+            self.widget_modsig2_freq.clear()
+            self.widget_modsig2_freq.setRange(xRange=(0,10000))
+            audio_fft = abs(self.FFT(data))
+            self.widget_modsig2_freq.plot(audio_fft, pen=self.pen)
+            self.ResultingModulated()
+
+    def LPF(self, signal, cutoff_hz, fs):
+        from scipy import signal as sg
+        # https://scipy.github.io/old-wiki/pages/Cookbook/FIRFilter.html
+
+        nyq_rate = fs/2
+        width = 5.0/nyq_rate
+        ripple_db = 60.0 #dB
+        N , beta = sg.kaiserord(ripple_db, width)
+        taps = sg.firwin(N, cutoff_hz/nyq_rate, window=('kaiser', beta))
+        return( sg.lfilter(taps, 1.0, signal))
+
+    def ResultingModulated(self):
+        if  self.modulatedTime1 != None and self.modulatedTime2 != None:
+            data = self.modulatedTime1 + self.modulatedTime2
+            self.plotResultingModulatedTime(data)
+        else:
+            print("Ainda não tem dois audios")
+
+    def plotResultingModulatedTime(self, data):
+        self.widget_modsigf_time.clear()
+        self.widget_modsigf_time.plot(data, pen=self.pen)
+        self.plotResultingModulatedFrequency(data)
+        self.ultimateaudio = data
+
+    def plotResultingModulatedFrequency(self, data):
+        self.widget_modsigf_freq.clear()
+        audio_fft = abs(self.FFT(data))
+        self.widget_modsigf_freq.plot(audio_fft, pen=self.pen)
+        
+    def playSound(self, data):
+        if self.ultimateaudio != None:
+            sd.play(data, self.fs)
+            sd.wait()
+        else:
+            self.console("Segura ae campeão, você não gerou tudo ainda")
 
 
 if __name__=="__main__":

@@ -9,6 +9,8 @@ import sys
 import os
 import transmitter_ui
 import webbrowser
+import matplotlib.pyplot as plt
+from pylab import *
 
 
 '''
@@ -23,7 +25,7 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         self.f1 = carrierFrequency1
         self.f2 = carrierFrequency2
         self.periodo = 1
-        self.recordDuration = 1 # in seconds
+        self.recordDuration = 3 # in seconds
 
         self.onRecordButtonClick()
 
@@ -31,13 +33,14 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         Essa função retorna o áudio captado pelo período de tempo especificado
     '''
     def getMicAudio(self):
-        audio = sd.rec(self.recordDuration * self.fs)
-        print("Microfone gravando... ")
-        sd.wait()
-        print("Pronto... ")
-        audio = audio[:, 0]
-        sd.play(audio, 44100)
-        sd.wait()
+        audio, fs = sf.read('../audio/generated_4f978.wav')
+        # print("Microfone gravando... ")
+        # audio = sd.rec(self.recordDuration * self.fs)
+        # sd.wait()
+        # print("Pronto... ")
+        # audio = audio[:, 0]
+        # sd.play(audio, fs)
+        # sd.wait()
         return audio
 
     '''
@@ -51,13 +54,26 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
     '''
     def onRecordButtonClick(self):
         recordedAudio = self.getMicAudio()
-        self.plotFourierSignal(recordedAudio)
+        # self.plotFourierSignal(recordedAudio)
         msg1, msg2 = self.applyDemodulation(recordedAudio)
-
-        print(msg1)
+        
+        self.saveFile(msg1, 'message_1')
+        self.saveFile(msg2, 'message_2')
 
     def plotFourierSignal(self, signal):
         fourierData = self.FFT(signal)
+        # win = np.hamming(len(signal))
+        # mag = np.abs(fourierData)
+        # ref = np.sum(win) / 2
+        # s_dbfs = 20 * np.log10(mag / ref)
+
+        plt.plot(fourierData)
+        plt.title('Fourier do sinal')
+        plt.ylabel('Amplitude')
+        plt.xlabel('Frequência')
+        plt.axis('tight')
+        plt.show()
+
         print("PLOT FOURIER HERE!")
 
     
@@ -74,16 +90,19 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         Retorna as duas mensagens originais, aplicando a demulação do sinal recebido
     '''
     def applyDemodulation(self, modulatedSignal):
-        t = np.linspace(0, self.periodo, self.fs * self.periodo)
-        carrier1 = modulatedSignal * np.sin(2 * np.pi * self.f1 * t)
-        carrier2 = modulatedSignal * np.sin(2 * np.pi * self.f2 * t)
+        print("Aplicando a demodulação...")
+        t = np.linspace(0, self.periodo, self.fs * self.recordDuration)
+        print(self.f1)
+        carrier1 = np.cos(2 * np.pi * self.f1 * t)
+        carrier2 = np.cos(2 * np.pi * self.f2 * t)
 
-        demodulated1 = modulatedSignal * carrier1
-        demodulated2 = modulatedSignal * carrier2
+        print(len(modulatedSignal))
+        print(len(carrier1))
+        demodulated1 = np.multiply(modulatedSignal, carrier1)
+        demodulated2 = np.multiply(modulatedSignal, carrier2)
 
-        msg1 = self.LPF(demodulated1, 4000, self.fs)
-        msg2 = self.LPF(demodulated2, 4000, self.fs)
-
+        msg1 = self.LPF(demodulated1, 2000, self.fs)
+        msg2 = self.LPF(demodulated2, 2000, self.fs)
         return msg1, msg2
     
     '''
@@ -101,7 +120,15 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         taps = sg.firwin(N, cutoff_hz / nyq_rate, window=('kaiser', beta))
         return(sg.lfilter(taps, 1.0, signal))
 
-
+    
+    '''
+        Salva as mensagens originais em arquivos .wav
+    '''
+    def saveFile(self, audio, msgId):
+        print("Salvando mensagem original")
+        filePath = "./audio/" + "received_" + msgId + ".wav"
+        print(filePath)
+        sf.write(filePath, audio, self.fs)
 
 if __name__ == "__main__":
     fs = 44100
@@ -111,6 +138,6 @@ if __name__ == "__main__":
 
 
     app = QtGui.QApplication(sys.argv)
-    window = Transmitter(44000, 50000)
+    window = Transmitter(4000, 14000)
     window.show()
     app.exec_()

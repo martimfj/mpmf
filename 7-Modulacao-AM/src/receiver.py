@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from PyQt4 import QtGui, QtCore
 import pyqtgraph as pg
 import pyqtgraph.exporters
@@ -20,6 +21,7 @@ from pylab import *
 class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
     def __init__(self, parent=None ):
         super(Receiver, self).__init__(parent)
+        self.setupUi(self)
         self.fs = 44100
         self.f1 = int(self.input_freq1.currentText())
         self.f2 = int(self.input_freq2.currentText())

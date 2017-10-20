@@ -36,7 +36,7 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
 
         #Audio 1 - Freq -> Audio Recuperado
         self.widget_audio_1_freq.setLabel("left", "Amplitude")
-        self.widget_audio_1_freq.setLabel("bottom", "Time", "seconds")
+        self.widget_audio_1_freq.setLabel("bottom", "Frequency", "Hz")
         self.widget_audio_1_freq.setMouseEnabled(y = False)
         self.widget_audio_1_freq.showGrid(True, True, 0.5)
 
@@ -48,7 +48,7 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
 
         #Audio 2 - Freq -> Audio Recuperado
         self.widget_audio_2_freq.setLabel("left", "Amplitude")
-        self.widget_audio_2_freq.setLabel("bottom", "Time", "seconds")
+        self.widget_audio_2_freq.setLabel("bottom", "Frequency", "Hz")
         self.widget_audio_2_freq.setMouseEnabled(y = False)
         self.widget_audio_2_freq.showGrid(True, True, 0.5)
 
@@ -60,7 +60,7 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
 
         #Audio Modulated Received - Freq -> Audio Ouvido
         self.widget_modulated_received_freq.setLabel("left", "Amplitude")
-        self.widget_modulated_received_freq.setLabel("bottom", "Time", "seconds")
+        self.widget_modulated_received_freq.setLabel("bottom", "Frequency", "Hz")
         self.widget_modulated_received_freq.setMouseEnabled(y = False)
         self.widget_modulated_received_freq.showGrid(True, True, 0.5)
 
@@ -72,7 +72,7 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
 
         #Audio Modulated 1 Received - Freq -> Audio Ouvido Separado
         self.widget_modulated_1_freq.setLabel("left", "Amplitude")
-        self.widget_modulated_1_freq.setLabel("bottom", "Time", "seconds")
+        self.widget_modulated_1_freq.setLabel("bottom", "Frequency", "Hz")
         self.widget_modulated_1_freq.setMouseEnabled(y = False)
         self.widget_modulated_1_freq.showGrid(True, True, 0.5)
         
@@ -84,7 +84,7 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
 
         #Audio Modulated 2 Received - Freq -> Audio Ouvido Separado
         self.widget_modulated_2_freq.setLabel("left", "Amplitude")
-        self.widget_modulated_2_freq.setLabel("bottom", "Time", "seconds")
+        self.widget_modulated_2_freq.setLabel("bottom", "Frequency", "Hz")
         self.widget_modulated_2_freq.setMouseEnabled(y = False)
         self.widget_modulated_2_freq.showGrid(True, True, 0.5)
 

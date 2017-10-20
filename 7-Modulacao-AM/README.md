@@ -13,14 +13,7 @@ Isso permite que possamos transmitir mais de um sinal ao mesmo tempo, pelo mesmo
 # Demodulação
 
 
-# Frequências das portadoras utilizadas
+# Frequências das portadoras utilizadas e bandas
+As frequências das portadoras utilizadas foram 4kHz e 14kHZ, pois assim o sinal de um áudio não transpõem o sinal do outro áudio em outra banda. A banda ocupada pelo áudio 1 foi de 1kHz a 7kHz e a segunda banda, ocupada pelo segund áudio foi de 8kHz a 19kHz.
 
-
-# Bandas ocupadas
-
-# Exeplos
-    - Inserir ao menos um gráfico exemplo de cada item de exibição do :
-         - transmissor
-         - receptor
-    - Comparar o resultado dos áudios transmitidos vs recebidos 
-
+![](./img/transmitter_charts.png)

@@ -45,6 +45,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.bg_window.sizePolicy().hasHeightForWidth())
         self.bg_window.setSizePolicy(sizePolicy)
+        self.bg_window.setMinimumSize(QtCore.QSize(1020, 740))
+        self.bg_window.setMaximumSize(QtCore.QSize(1020, 740))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Open Sans"))
         self.bg_window.setFont(font)
@@ -188,6 +190,10 @@ class Ui_MainWindow(object):
         self.console_display.setModelColumn(0)
         self.console_display.setUniformItemSizes(True)
         self.console_display.setObjectName(_fromUtf8("console_display"))
+        self.button_record = QtGui.QPushButton(self.centralwidget)
+        self.button_record.setEnabled(True)
+        self.button_record.setGeometry(QtCore.QRect(186, 435, 115, 25))
+        self.button_record.setObjectName(_fromUtf8("button_record"))
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -202,5 +208,7 @@ class Ui_MainWindow(object):
         self.button_save.setText(_translate("MainWindow", "Save", None))
         self.button_play.setToolTip(_translate("MainWindow", "Reproduce resulting modulated signal", None))
         self.button_play.setText(_translate("MainWindow", "Play", None))
+        self.button_record.setToolTip(_translate("MainWindow", "Reproduce resulting modulated signal", None))
+        self.button_record.setText(_translate("MainWindow", "Record", None))
 
 from pyqtgraph import PlotWidget

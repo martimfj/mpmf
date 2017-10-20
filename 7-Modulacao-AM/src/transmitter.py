@@ -26,7 +26,7 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         self.carrier_2 = self.carrier_type_2.currentText()
         self.message_1 = None
         self.message_2 = None
-        self.cut_freq = 4000
+        self.cut_freq = 2000
         self.modulatedTime1 = None
         self.modulatedTime2 = None
         self.ultimateaudio = None
@@ -158,15 +158,16 @@ class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
         path, fileName = os.path.split(fileLocation)
 
         if version == "1":
-            self.message_1, self.fl = sf.read(fileLocation)
-            self.message_1 = self.LPF(self.message_1, self.cut_freq, self.fl)
+            audio1, self.fl = sf.read(fileLocation)
+            print(self.fl)
+            self.message_1 = self.LPF(audio1, self.cut_freq, self.fl)
             self.plotDataTime(self.message_1, version)
             self.plotCarrierTime(self.createCarrierWave("1"), "1")
             self.console("Audio {1} File Loaded from: {0}".format(fileLocation, version))
             self.saveFile("audio1_filtrado.wav", self.message_1)
         else:
-            self.message_2, self.fl = sf.read(fileLocation)
-            self.message_2 = self.LPF(self.message_2, self.cut_freq, self.fl)
+            audio2, self.fl = sf.read(fileLocation)
+            self.message_2 = self.LPF(audio2, self.cut_freq, self.fl)
             self.plotDataTime(self.message_2, version)
             self.plotCarrierTime(self.createCarrierWave("2"), "2")
             self.console("Audio {1} File Loaded from: {0}".format(fileLocation, version))

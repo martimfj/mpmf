@@ -7,7 +7,7 @@ import sounddevice as sd
 from scipy import signal as sg
 import sys
 import os
-import transmitter_ui
+import receiver_ui
 import webbrowser
 import matplotlib.pyplot as plt
 from pylab import *
@@ -17,17 +17,80 @@ from pylab import *
     Função responsável por receber as ondas de áudio transmitidas, demodula-las e salvar os sinais de áudio.
     Recebe como parâmetro as duas frequências das ondas portadoras usadas para transmitir os sinais.
 '''
-class Transmitter(QtGui.QMainWindow, transmitter_ui. Ui_MainWindow):
-    def __init__(self, carrierFrequency1, carrierFrequency2, parent=None ):
-        super(Transmitter, self).__init__(parent)
-        
+class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
+    def __init__(self, parent=None ):
+        super(Receiver, self).__init__(parent)
         self.fs = 44100
-        self.f1 = carrierFrequency1
-        self.f2 = carrierFrequency2
+        self.f1 = int(self.input_freq1.currentText())
+        self.f2 = int(self.input_freq2.currentText())
         self.periodo = 1
         self.recordDuration = 3 # in seconds
 
-        self.onRecordButtonClick()
+        #Audio 1 - Time -> Audio Recuperado
+        self.widget_audio_1_time.setLabel("left", "Amplitude")
+        self.widget_audio_1_time.setLabel("bottom", "Time", "seconds")
+        self.widget_audio_1_time.setMouseEnabled(y = False)
+        self.widget_audio_1_time.showGrid(True, True, 0.5)
+
+        #Audio 1 - Freq -> Audio Recuperado
+        self.widget_audio_1_freq.setLabel("left", "Amplitude")
+        self.widget_audio_1_freq.setLabel("bottom", "Time", "seconds")
+        self.widget_audio_1_freq.setMouseEnabled(y = False)
+        self.widget_audio_1_freq.showGrid(True, True, 0.5)
+
+        #Audio 2 - Time -> Audio Recuperado
+        self.widget_audio_2_time.setLabel("left", "Amplitude")
+        self.widget_audio_2_time.setLabel("bottom", "Time", "seconds")
+        self.widget_audio_2_time.setMouseEnabled(y = False)
+        self.widget_audio_2_time.showGrid(True, True, 0.5)
+
+        #Audio 2 - Freq -> Audio Recuperado
+        self.widget_audio_2_freq.setLabel("left", "Amplitude")
+        self.widget_audio_2_freq.setLabel("bottom", "Time", "seconds")
+        self.widget_audio_2_freq.setMouseEnabled(y = False)
+        self.widget_audio_2_freq.showGrid(True, True, 0.5)
+
+        #Audio Modulated Received - Time -> Audio Ouvido
+        self.widget_modulated_received_time.setLabel("left", "Amplitude")
+        self.widget_modulated_received_time.setLabel("bottom", "Time", "seconds")
+        self.widget_modulated_received_time.setMouseEnabled(y = False)
+        self.widget_modulated_received_time.showGrid(True, True, 0.5)
+
+        #Audio Modulated Received - Freq -> Audio Ouvido
+        self.widget_modulated_received_freq.setLabel("left", "Amplitude")
+        self.widget_modulated_received_freq.setLabel("bottom", "Time", "seconds")
+        self.widget_modulated_received_freq.setMouseEnabled(y = False)
+        self.widget_modulated_received_freq.showGrid(True, True, 0.5)
+
+        #Audio Modulated 1 Received - Time -> Audio Ouvido Separado
+        self.widget_modulated_1_time.setLabel("left", "Amplitude")
+        self.widget_modulated_1_time.setLabel("bottom", "Time", "seconds")
+        self.widget_modulated_1_time.setMouseEnabled(y = False)
+        self.widget_modulated_1_time.showGrid(True, True, 0.5)
+
+        #Audio Modulated 1 Received - Freq -> Audio Ouvido Separado
+        self.widget_modulated_1_freq.setLabel("left", "Amplitude")
+        self.widget_modulated_1_freq.setLabel("bottom", "Time", "seconds")
+        self.widget_modulated_1_freq.setMouseEnabled(y = False)
+        self.widget_modulated_1_freq.showGrid(True, True, 0.5)
+        
+        #Audio Modulated 2 Received - Time -> Audio Ouvido Separado
+        self.widget_modulated_2_time.setLabel("left", "Amplitude")
+        self.widget_modulated_2_time.setLabel("bottom", "Time", "seconds")
+        self.widget_modulated_2_time.setMouseEnabled(y = False)
+        self.widget_modulated_2_time.showGrid(True, True, 0.5)
+
+        #Audio Modulated 2 Received - Freq -> Audio Ouvido Separado
+        self.widget_modulated_2_freq.setLabel("left", "Amplitude")
+        self.widget_modulated_2_freq.setLabel("bottom", "Time", "seconds")
+        self.widget_modulated_2_freq.setMouseEnabled(y = False)
+        self.widget_modulated_2_freq.showGrid(True, True, 0.5)
+
+        #Botão Salvar
+        #self.button_save
+
+        #Botão Save
+        #self.button_play
 
     '''
         Essa função retorna o áudio captado pelo período de tempo especificado
@@ -138,6 +201,6 @@ if __name__ == "__main__":
 
 
     app = QtGui.QApplication(sys.argv)
-    window = Transmitter(4000, 14000)
+    window = Receiver()
     window.show()
     app.exec_()

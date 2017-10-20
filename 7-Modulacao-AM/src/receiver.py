@@ -23,8 +23,8 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
         super(Receiver, self).__init__(parent)
         self.setupUi(self)
         self.fs = 44100
-        self.f1 = int(self.input_freq1.currentText())
-        self.f2 = int(self.input_freq2.currentText())
+        self.f1 = self.input_freq1.text()
+        self.f2 = self.input_freq2.text()
         self.periodo = 1
         self.recordDuration = 3 # in seconds
 

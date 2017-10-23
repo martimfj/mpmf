@@ -113,7 +113,7 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
         # audio, fs = sf.read('../audio/generated_4f978.wav')
         print("Microfone gravando... ")
         audio = sd.rec(self.recordDuration * self.fs)
-        sd.wait()
+        # sd.wait()
         print("Pronto... ")
         audio = audio[:, 0]
         # sd.play(audio, fs)
@@ -134,7 +134,6 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
             self.console("Defina as frequências das portadoras")
             return
         
-        self.clearFocus()
         recordedAudio = self.getMicAudio()
         # self.saveFile(recordedAudio, "recebido")
         self.plotTimeSignal(recordedAudio, self.widget_modulated_received_time)
@@ -187,8 +186,8 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
         t = np.linspace(0, self.periodo, self.fs * self.recordDuration)
         np_wave = np.cos if self.carrier_wave_type == 'Cosine' else np.sin
 
-        carrier1 = np.cos(2 * np.pi * self.f1 * t)
-        carrier2 = np.cos(2 * np.pi * self.f2 * t)
+        carrier1 = np_wave(2 * np.pi * self.f1 * t)
+        carrier2 = np_wave(2 * np.pi * self.f2 * t)
 
         demodulated1 = np.multiply(modulatedSignal, carrier1)
         demodulated2 = np.multiply(modulatedSignal, carrier2)

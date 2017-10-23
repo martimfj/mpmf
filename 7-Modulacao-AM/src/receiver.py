@@ -23,10 +23,19 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
         super(Receiver, self).__init__(parent)
         self.setupUi(self)
         self.fs = 44100
-        self.f1 = self.input_freq1.text()
-        self.f2 = self.input_freq2.text()
-        self.periodo = 1
+        self.pen = pyqtgraph.mkPen(color='g')
+
+        self.input_freq1.setText('4000')
+        self.input_freq2.setText('15000')
+
+        self.f1 = int(self.input_freq1.text())
+        self.f2 = int(self.input_freq2.text())
+
+        self.input_freq1.textChanged.connect(lambda: self.frequency_change("1"))
+        self.input_freq2.textChanged.connect(lambda: self.frequency_change("2"))
+        
         self.recordDuration = 3 # in seconds
+        self.periodo = 1
 
         #Audio 1 - Time -> Audio Recuperado
         self.widget_audio_1_time.setLabel("left", "Amplitude")
@@ -92,7 +101,10 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
         #self.button_save
 
         #Botão Save
-        #self.button_play
+        self.button_record.clicked.connect(lambda: self.onRecordButtonClick())
+
+        self.carrier_wave_type = self.carrier_type.currentText()
+        self.carrier_type.currentIndexChanged.connect(lambda: self.carrier_type_change())
 
     '''
         Essa função retorna o áudio captado pelo período de tempo especificado
@@ -104,8 +116,8 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
         sd.wait()
         print("Pronto... ")
         audio = audio[:, 0]
-        sd.play(audio, fs)
-        sd.wait()
+        # sd.play(audio, fs)
+        # sd.wait()
         return audio
 
     '''
@@ -118,30 +130,45 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
         TODO: criar a interface com o botão e chamar essa função toda vez que ele for clicado
     '''
     def onRecordButtonClick(self):
-        recordedAudio = self.getMicAudio()
-        # self.plotFourierSignal(recordedAudio)
-        msg1, msg2 = self.applyDemodulation(recordedAudio)
+        if (len(str(self.f1)) == 0 or len(str(self.f2)) == 0):
+            self.console("Defina as frequências das portadoras")
+            return
         
+        self.clearFocus()
+        recordedAudio = self.getMicAudio()
+        # self.saveFile(recordedAudio, "recebido")
+        self.plotTimeSignal(recordedAudio, self.widget_modulated_received_time)
+        self.plotFourierSignal(recordedAudio, self.widget_modulated_received_freq)
+        msg1, msg2 = self.applyDemodulation(recordedAudio)
+
+        self.plotTimeSignal(msg1, self.widget_audio_1_time)
+        self.plotFourierSignal(msg1, self.widget_audio_1_freq)
+
+        self.plotTimeSignal(msg2, self.widget_audio_2_time)
+        self.plotFourierSignal(msg2, self.widget_audio_2_freq)
+
         self.saveFile(msg1, 'message_1')
         self.saveFile(msg2, 'message_2')
 
-    def plotFourierSignal(self, signal):
+        self.playMsg(msg1, 'Tocando mensagem 1')
+        self.playMsg(msg2, 'Tocando mensagem 2')
+
+    '''
+        Plote o sinal em fourier
+    '''
+    def plotFourierSignal(self, signal, widget):
         fourierData = self.FFT(signal)
-        # win = np.hamming(len(signal))
-        # mag = np.abs(fourierData)
-        # ref = np.sum(win) / 2
-        # s_dbfs = 20 * np.log10(mag / ref)
+        a = abs(fourierData)
+        widget.clear()
+        widget.plot(a, pen=self.pen)
 
-        plt.plot(fourierData)
-        plt.title('Fourier do sinal')
-        plt.ylabel('Amplitude')
-        plt.xlabel('Frequência')
-        plt.axis('tight')
-        plt.show()
+    '''
+        Plote o sinal no tempo
+    '''
+    def plotTimeSignal(self, signal, widget):
+        widget.clear()
+        widget.plot(signal, pen=self.pen)
 
-        print("PLOT FOURIER HERE!")
-
-    
     ''' 
         Retorna a transformada de Fourier de um sinal
     '''
@@ -155,14 +182,14 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
         Retorna as duas mensagens originais, aplicando a demulação do sinal recebido
     '''
     def applyDemodulation(self, modulatedSignal):
-        print("Aplicando a demodulação...")
+        self.console("Aplicando a demodulação...")
+
         t = np.linspace(0, self.periodo, self.fs * self.recordDuration)
-        print(self.f1)
+        np_wave = np.cos if self.carrier_wave_type == 'Cosine' else np.sin
+
         carrier1 = np.cos(2 * np.pi * self.f1 * t)
         carrier2 = np.cos(2 * np.pi * self.f2 * t)
 
-        print(len(modulatedSignal))
-        print(len(carrier1))
         demodulated1 = np.multiply(modulatedSignal, carrier1)
         demodulated2 = np.multiply(modulatedSignal, carrier2)
 
@@ -190,10 +217,35 @@ class Receiver(QtGui.QMainWindow, receiver_ui. Ui_MainWindow):
         Salva as mensagens originais em arquivos .wav
     '''
     def saveFile(self, audio, msgId):
-        print("Salvando mensagem original")
+        self.console("Salvando mensagem original")
         filePath = "./audio/" + "received_" + msgId + ".wav"
-        print(filePath)
+        self.console(filePath)
         sf.write(filePath, audio, self.fs)
+
+    
+    def frequency_change(self, version):
+        if version == "1":
+            self.f1 = int(self.input_freq1.text())
+        else:
+            self.f2 = int(self.input_freq2.text())
+
+    def carrier_type_change(self):
+        self.carrier_wave_type = self.carrier_type.currentText()
+
+    def console(self, text):
+        item = QtGui.QListWidgetItem()
+        item.setText(text)
+        item.setFlags(QtCore.Qt.NoItemFlags)
+        self.console_display.addItem(item)
+
+    def cleanConsole(self):
+        self.console_display.clear()
+
+
+    def playMsg(self, msg, logOutput):
+        self.console(logOutput)
+        sd.play(msg, self.fs)
+        sd.wait()
 
 if __name__ == "__main__":
     fs = 44100

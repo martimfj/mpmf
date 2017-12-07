@@ -262,107 +262,108 @@ class DTMF(QtGui.QMainWindow, ui_DTMF. Ui_MainWindow):
         peaks, _ = peakdet(abs(data), 50)
 
         peaks_feq = [item[0] for item in peaks]
+        print(data)
+        # self.console("olá")
+        # #print(peaks)
+        # if self.radio_mode_encoder.isChecked():
+        #     self.console("These frequencies were detected in the FFT: {}Hz, {}Hz".format(peaks[0][0],peaks[1][0]))
+        #     if 697-5 <= peaks[0][0] <= 697+5 and 1209-5 <= peaks[1][0] <= 1209+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("1"))
+        #             print("Achei")
+        #     elif 697-5 <= peaks[0][0] <= 697+5 and 1336-5 <= peaks[1][0] <= 1336+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("2"))
+        #     elif 697-5 <= peaks[0][0] <= 697+5 and 1477-5 <= peaks[1][0] <= 1477+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("3"))
+        #     elif 770-5 <= peaks[0][0] <= 770+5 and 1209-5 <= peaks[1][0] <= 1209+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("4"))
+        #     elif 770-5 <= peaks[0][0] <= 770+5 and 1336-5 <= peaks[1][0] <= 1336+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("5"))
+        #     elif 770-5 <= peaks[0][0] <= 770+5 and 1477-5 <= peaks[1][0] <= 1477+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("6"))
+        #     elif 852-5 <= peaks[0][0] <= 852+5 and 1209-5 <= peaks[1][0] <= 1209+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("7"))
+        #     elif 852-5 <= peaks[0][0] <= 852+5 and 1336-5 <= peaks[1][0] <= 1336+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("8"))
+        #     elif 852-5 <= peaks[0][0] <= 852+5 and 1477-5 <= peaks[1][0] <= 1477+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("9"))
+        #     elif 941-5 <= peaks[0][0] <= 941+5 and 1209-5 <= peaks[1][0] <= 1209+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("*"))
+        #     elif 941-5 <= peaks[0][0] <= 941+5 and 1336-5 <= peaks[1][0] <= 1336+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("0"))
+        #     elif 941-5 <= peaks[0][0] <= 941+5 and 1477-5 <= peaks[1][0] <= 1477+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("#"))
+        #     else:
+        #         self.console("Tone not detected")
+        #     self.console("͏͏͏͏          ")
 
-        #print(peaks)
-        if self.radio_mode_encoder.isChecked():
-            self.console("These frequencies were detected in the FFT: {}Hz, {}Hz".format(peaks[0][0],peaks[1][0]))
-            if 697-5 <= peaks[0][0] <= 697+5 and 1209-5 <= peaks[1][0] <= 1209+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("1"))
-                    print("Achei")
-            elif 697-5 <= peaks[0][0] <= 697+5 and 1336-5 <= peaks[1][0] <= 1336+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("2"))
-            elif 697-5 <= peaks[0][0] <= 697+5 and 1477-5 <= peaks[1][0] <= 1477+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("3"))
-            elif 770-5 <= peaks[0][0] <= 770+5 and 1209-5 <= peaks[1][0] <= 1209+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("4"))
-            elif 770-5 <= peaks[0][0] <= 770+5 and 1336-5 <= peaks[1][0] <= 1336+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("5"))
-            elif 770-5 <= peaks[0][0] <= 770+5 and 1477-5 <= peaks[1][0] <= 1477+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("6"))
-            elif 852-5 <= peaks[0][0] <= 852+5 and 1209-5 <= peaks[1][0] <= 1209+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("7"))
-            elif 852-5 <= peaks[0][0] <= 852+5 and 1336-5 <= peaks[1][0] <= 1336+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("8"))
-            elif 852-5 <= peaks[0][0] <= 852+5 and 1477-5 <= peaks[1][0] <= 1477+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("9"))
-            elif 941-5 <= peaks[0][0] <= 941+5 and 1209-5 <= peaks[1][0] <= 1209+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("*"))
-            elif 941-5 <= peaks[0][0] <= 941+5 and 1336-5 <= peaks[1][0] <= 1336+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("0"))
-            elif 941-5 <= peaks[0][0] <= 941+5 and 1477-5 <= peaks[1][0] <= 1477+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("#"))
-            else:
-                self.console("Tone not detected")
-            self.console("͏͏͏͏          ")
-
-        if self.radio_mode_decoder.isChecked():
-            peaks_found = self.getOnlyNiceFeq(peaks)
-            self.console("These frequencies were detected in the FFT: {}Hz, {}Hz".format(peaks_found[0],peaks_found[1]))
-            if 697-5 <= peaks_found[0] <= 697+5 and 1209-5 <= peaks_found[1] <= 1209+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("1"))
-                    if self.checkBox_saveDTMF_detected.isChecked():
-                        self.savePlotData("1", self.widget_real_time_plot, self.widget_fourier_plot)
-                        self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_1.wav")
-            elif 697-5 <= peaks_found[0] <= 697+5 and 1336-5 <= peaks_found[1] <= 1336+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("2"))
-                    if self.checkBox_saveDTMF_detected.isChecked():
-                        self.savePlotData("2", self.widget_real_time_plot, self.widget_fourier_plot)
-                        self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_2.wav")
-            elif 697-5 <= peaks_found[0] <= 697+5 and 1477-5 <= peaks_found[1] <= 1477+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("3"))
-                    if self.checkBox_saveDTMF_detected.isChecked():
-                        self.savePlotData("3", self.widget_real_time_plot, self.widget_fourier_plot)
-                        self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_3.wav")
-            elif 770-5 <= peaks_found[0] <= 770+5 and 1209-5 <= peaks_found[1] <= 1209+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("4"))
-                    if self.checkBox_saveDTMF_detected.isChecked():
-                        self.savePlotData("4", self.widget_real_time_plot, self.widget_fourier_plot)
-                        self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_4.wav")
-            elif 770-5 <= peaks_found[0] <= 770+5 and 1336-5 <= peaks_found[1] <= 1336+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("5"))
-                    if self.checkBox_saveDTMF_detected.isChecked():
-                        self.savePlotData("5", self.widget_real_time_plot, self.widget_fourier_plot)
-                        self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_5.wav")
-            elif 770-5 <= peaks_found[0] <= 770+5 and 1477-5 <= peaks_found[1] <= 1477+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("6"))
-                    if self.checkBox_saveDTMF_detected.isChecked():
-                        self.savePlotData("6", self.widget_real_time_plot, self.widget_fourier_plot)
-                        self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_6.wav")
-            elif 852-5 <= peaks_found[0] <= 852+5 and 1209-5 <= peaks_found[1] <= 1209+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("7"))
-                    if self.checkBox_saveDTMF_detected.isChecked():
-                        self.savePlotData("7", self.widget_real_time_plot, self.widget_fourier_plot)
-                        self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_7.wav")
-            elif 852-5 <= peaks_found[0] <= 852+5 and 1336-5 <= peaks_found[1] <= 1336+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("8"))
-                    if self.checkBox_saveDTMF_detected.isChecked():
-                        self.savePlotData("8", self.widget_real_time_plot, self.widget_fourier_plot)
-                        self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_8.wav")
-            elif 852-5 <= peaks_found[0] <= 852+5 and 1477-5 <= peaks_found[1] <= 1477+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("9"))
-                    if self.checkBox_saveDTMF_detected.isChecked():
-                        self.savePlotData("9", self.widget_real_time_plot, self.widget_fourier_plot)
-                        self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_9.wav")
-            elif 941-5 <= peaks_found[0] <= 941+5 and 1209-5 <= peaks_found[1] <= 1209+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("*"))
-                    if self.checkBox_saveDTMF_detected.isChecked():
-                        self.savePlotData("asterisk", self.widget_real_time_plot, self.widget_fourier_plot)
-                        self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_asterisk.wav")
-            elif 941-5 <= peaks_found[0] <= 941+5 and 1336-5 <= peaks_found[1] <= 1336+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("0"))
-                    if self.checkBox_saveDTMF_detected.isChecked():
-                        self.savePlotData("0", self.widget_real_time_plot, self.widget_fourier_plot)
-                        self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_0.wav")
-            elif 941-5 <= peaks_found[0] <= 941+5 and 1477-5 <= peaks_found[1] <= 1477+5:
-                    self.console("Which indicates that the tone reproduced was: {}".format("#"))
-                    if self.checkBox_saveDTMF_detected.isChecked():
-                        self.savePlotData("hashtag", self.widget_real_time_plot, self.widget_fourier_plot)
-                        self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_hashtag.wav")
-            else:
-                self.console("Tone not detected")
-                self.console("These are some frenquecies that were notable in the audio:")
-                self.console("{}".format(peaks_feq))
-            self.console("͏͏͏͏          ")
+        # if self.radio_mode_decoder.isChecked():
+        #     peaks_found = self.getOnlyNiceFeq(peaks)
+        #     self.console("These frequencies were detected in the FFT: {}Hz, {}Hz".format(peaks_found[0],peaks_found[1]))
+        #     if 697-5 <= peaks_found[0] <= 697+5 and 1209-5 <= peaks_found[1] <= 1209+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("1"))
+        #             if self.checkBox_saveDTMF_detected.isChecked():
+        #                 self.savePlotData("1", self.widget_real_time_plot, self.widget_fourier_plot)
+        #                 self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_1.wav")
+        #     elif 697-5 <= peaks_found[0] <= 697+5 and 1336-5 <= peaks_found[1] <= 1336+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("2"))
+        #             if self.checkBox_saveDTMF_detected.isChecked():
+        #                 self.savePlotData("2", self.widget_real_time_plot, self.widget_fourier_plot)
+        #                 self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_2.wav")
+        #     elif 697-5 <= peaks_found[0] <= 697+5 and 1477-5 <= peaks_found[1] <= 1477+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("3"))
+        #             if self.checkBox_saveDTMF_detected.isChecked():
+        #                 self.savePlotData("3", self.widget_real_time_plot, self.widget_fourier_plot)
+        #                 self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_3.wav")
+        #     elif 770-5 <= peaks_found[0] <= 770+5 and 1209-5 <= peaks_found[1] <= 1209+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("4"))
+        #             if self.checkBox_saveDTMF_detected.isChecked():
+        #                 self.savePlotData("4", self.widget_real_time_plot, self.widget_fourier_plot)
+        #                 self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_4.wav")
+        #     elif 770-5 <= peaks_found[0] <= 770+5 and 1336-5 <= peaks_found[1] <= 1336+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("5"))
+        #             if self.checkBox_saveDTMF_detected.isChecked():
+        #                 self.savePlotData("5", self.widget_real_time_plot, self.widget_fourier_plot)
+        #                 self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_5.wav")
+        #     elif 770-5 <= peaks_found[0] <= 770+5 and 1477-5 <= peaks_found[1] <= 1477+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("6"))
+        #             if self.checkBox_saveDTMF_detected.isChecked():
+        #                 self.savePlotData("6", self.widget_real_time_plot, self.widget_fourier_plot)
+        #                 self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_6.wav")
+        #     elif 852-5 <= peaks_found[0] <= 852+5 and 1209-5 <= peaks_found[1] <= 1209+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("7"))
+        #             if self.checkBox_saveDTMF_detected.isChecked():
+        #                 self.savePlotData("7", self.widget_real_time_plot, self.widget_fourier_plot)
+        #                 self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_7.wav")
+        #     elif 852-5 <= peaks_found[0] <= 852+5 and 1336-5 <= peaks_found[1] <= 1336+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("8"))
+        #             if self.checkBox_saveDTMF_detected.isChecked():
+        #                 self.savePlotData("8", self.widget_real_time_plot, self.widget_fourier_plot)
+        #                 self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_8.wav")
+        #     elif 852-5 <= peaks_found[0] <= 852+5 and 1477-5 <= peaks_found[1] <= 1477+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("9"))
+        #             if self.checkBox_saveDTMF_detected.isChecked():
+        #                 self.savePlotData("9", self.widget_real_time_plot, self.widget_fourier_plot)
+        #                 self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_9.wav")
+        #     elif 941-5 <= peaks_found[0] <= 941+5 and 1209-5 <= peaks_found[1] <= 1209+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("*"))
+        #             if self.checkBox_saveDTMF_detected.isChecked():
+        #                 self.savePlotData("asterisk", self.widget_real_time_plot, self.widget_fourier_plot)
+        #                 self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_asterisk.wav")
+        #     elif 941-5 <= peaks_found[0] <= 941+5 and 1336-5 <= peaks_found[1] <= 1336+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("0"))
+        #             if self.checkBox_saveDTMF_detected.isChecked():
+        #                 self.savePlotData("0", self.widget_real_time_plot, self.widget_fourier_plot)
+        #                 self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_0.wav")
+        #     elif 941-5 <= peaks_found[0] <= 941+5 and 1477-5 <= peaks_found[1] <= 1477+5:
+        #             self.console("Which indicates that the tone reproduced was: {}".format("#"))
+        #             if self.checkBox_saveDTMF_detected.isChecked():
+        #                 self.savePlotData("hashtag", self.widget_real_time_plot, self.widget_fourier_plot)
+        #                 self.renameFile("./audio/received/" + "{}".format(self.loaded_file_name.text()) , "./audio/received/recorded_tone_hashtag.wav")
+        #     else:
+        #         self.console("Tone not detected")
+        #         self.console("These are some frenquecies that were notable in the audio:")
+        #         self.console("{}".format(peaks_feq))
+        #     self.console("͏͏͏͏          ")
             
     def getOnlyNiceFeq(self, data):
         data_low = data
@@ -445,10 +446,10 @@ class DTMF(QtGui.QMainWindow, ui_DTMF. Ui_MainWindow):
                 # ref = np.sum(win) / 2                           
                 # s_dbfs = 20 * np.log10(mag / ref)
                 # freq = np.arange((N / 2 - 1)) / (float(N) / self.fs)
-                self.widget_fourier_plot.plot(self.ear.fftx, self.ear.fft/self.maxFFT,pen=self.pen,clear=True)
-                self.widget_real_time_plot.plot(self.ear.datax, self.ear.data, pen=self.pen, clear=True)
-                # audio_fft = self.FFT(self.ear.data)
-                # self.getPeaks(audio_fft)
+                # self.widget_fourier_plot.plot(self.ear.fftx, self.ear.fft/self.maxFFT,pen=self.pen,clear=True)
+                # self.widget_real_time_plot.plot(self.ear.datax, self.ear.data, pen=self.pen, clear=True)
+                audio_fft = self.FFT(self.ear.data)
+                self.getPeaks(audio_fft)
             QtCore.QTimer.singleShot(1, self.update)
         else:
             self.ear.close()
